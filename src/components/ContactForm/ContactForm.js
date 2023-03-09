@@ -5,9 +5,28 @@ import {
   StyledLabel,
   StyledAddButton,
 } from './ContactForm.styled';
-import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
+import { addContact } from 'redux/contactsSlice';
+import { getContacts } from 'redux/selectors';
 
-export const ContactForm = ({ onSubmit }) => {
+export const ContactForm = () => {
+  const contacts = useSelector(getContacts);
+  const dispatch = useDispatch();
+  const onSubmit = event => {
+    event.preventDefault();
+    const form = event.target;
+    if (
+      contacts.map(contact => contact.name).includes(form.elements.name.value)
+    ) {
+      window.alert(`${form.elements.name.value} is already in contacts!`);
+    } else {
+      dispatch(
+        addContact(form.elements.name.value, form.elements.number.value)
+      );
+    }
+    form.reset();
+    document.querySelector('input#nameInput').focus();
+  };
   return (
     <StyledInputArea>
       <form onSubmit={onSubmit}>
@@ -33,8 +52,4 @@ export const ContactForm = ({ onSubmit }) => {
       </form>
     </StyledInputArea>
   );
-};
-
-ContactForm.propTypes = {
-  onSubmit: PropTypes.func,
 };
