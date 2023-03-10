@@ -1,11 +1,22 @@
 import React from 'react';
 import { StyledContactList } from './ContactList.styled';
-import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
+import { ContactListElement } from 'components/ContactListElement/ContactListElement';
+import { getFilteredAndSortedContacts } from 'redux/selectors';
 
-export const ContactList = ({ children }) => {
-  return <StyledContactList id="contactsList">{children}</StyledContactList>;
-};
+export const ContactList = () => {
+  const filteredAndSortedContacts = useSelector(getFilteredAndSortedContacts);
 
-ContactList.propTypes = {
-  children: PropTypes.arrayOf(PropTypes.element),
+  return (
+    <StyledContactList id="contactsList">
+      {filteredAndSortedContacts.map(contact => (
+        <ContactListElement
+          key={contact.id}
+          id={contact.id}
+          name={contact.name}
+          number={contact.number}
+        />
+      ))}
+    </StyledContactList>
+  );
 };
